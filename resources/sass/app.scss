@@ -1,4 +1,6 @@
-// Bootstrap
+// Bootstrap 代码将导入 node_modules/bootstrap/scss/bootstrap.scss 文件。
+// 你也可以使用下面代码来对单独一个文件进行导入：
+// @import "node_modules/bootstrap/scss/_alert.scss";
 @import '~bootstrap/scss/bootstrap';
 
 body {
