@@ -12,6 +12,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    //Eloquent 模型中借助对 table 属性的定义，来指明要进行数据库交互的数据库表名称，
+    //protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      * fillable:过滤用户提交的字段，只有包含在该属性中的字段才能够被正常更新：
@@ -42,4 +45,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function gravatar($size = '100')
+    {
+        $hash = md5(strtolower(trim($this->attributes['email'])));
+        return "http://www.gravatar.com/avatar/$hash?s=$size";
+    }
 }
