@@ -12,8 +12,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    //Eloquent 模型中借助对 table 属性的定义，来指明要进行数据库交互的数据库表名称，
-    //protected $table = 'users';
+    // Eloquent 模型中借助对 table 属性的定义，来指明要进行数据库交互的数据库表名称，
+    // 看过上面的示例，你可能留意到了我们没有为 Eloquent 指明 Flight 模型要使用哪张数据表。除非明确指定使用其它数据表，否则将按照约定，使用类的复数形式「蛇形命名」来作为表名。因此，在这种情况下，Eloquent 将认为 Flight 模型存储的是 flights 表中的数据
+    // https://learnku.com/docs/laravel/8.5/eloquent/10409#bd9cb1
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.

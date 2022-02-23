@@ -14,6 +14,7 @@ class UsersController extends Controller
 
     public function show(User $user)
     {
+//        var_dump($user);die;
         return view('users.show',compact('user'));
     }
 }
