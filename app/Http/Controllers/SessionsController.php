@@ -21,7 +21,7 @@ class SessionsController extends Controller
             'password' => 'required'
         ]);
 
-        if(Auth::attempt($credentials)){
+        if(Auth::attempt($credentials,$request->has('remeber'))){
             session()->flash('success','欢迎回来！');
             return redirect()->route('users.show',[Auth::user()]);
         }else{
@@ -34,6 +34,6 @@ class SessionsController extends Controller
     {
         Auth::logout();
         session()->flash('success','您已成功退出！');
-        return redirect('login');
+        return redirect()->route('login');
     }
 }
