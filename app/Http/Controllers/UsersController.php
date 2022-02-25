@@ -8,20 +8,32 @@ use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth',[
+            // except:不使用中间件
+            'except' => ['show','create','store'],
+        ]);
+
+        $this->middleware('guest',[
+            'only' => ['create'],
+        ]);
+    }
+
+    // 注册
     public function create()
     {
         return view('users.create');
     }
 
+    // 显示个人页面
+    // 可以看每个人的主页
     public function show(User $user)
     {
-//        var_dump($user);die;
         return view('users.show',compact('user'));
     }
 
-    /**
-     * 用于处理表单数据
-     */
+    //用户注册的 post 请求
     public function store(Request $request)
     {
         $this->validate($request,[
@@ -43,13 +55,17 @@ class UsersController extends Controller
         return redirect()->route('users.show',[$user->id]);
     }
 
+    // 编辑用户的页面
     public function edit(User $user)
     {
+        $this->authorize('update',$user);
         return view('users.edit',compact('user'));
     }
 
+    // 更新用户的 post 请求
     public function update(User $user,Request $request)
     {
+        $this->authorize('update',$user);
         $this->validate($request,[
             'name' => 'required|max:50',
             'password' => 'nullable|confirmed|min:6',
