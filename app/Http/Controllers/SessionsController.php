@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SessionsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('guest',[
-            'only' => ['create'],
-        ]);
-    }
+//    // 分配到路由中间件  https://learnku.com/docs/laravel/8.x/middleware/9366#901403
+//    public function __construct()
+//    {
+//        $this->middleware('guest',[
+//            'only' => ['create'],
+//        ]);
+//    }
 
     // 显示用户登录页面
     public function create()

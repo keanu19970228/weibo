@@ -4,20 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class UsersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth',[
-            // except:不使用中间件
-            'except' => ['show','create','store'],
-        ]);
+//        $this->middleware('auth',[
+//            // except:以下方法不使用中间件
+//            'except' => ['show','create','store'],
+//        ]);
+//
+//        $this->middleware('guest',[
+//            'only' => ['create'],
+//        ]);
 
-        $this->middleware('guest',[
-            'only' => ['create'],
-        ]);
+        // 8.x 可以这样写 https://learnku.com/docs/laravel/8.x/controllers/9368#c66e88
+        $this->middleware('auth')->except(['show','create','store']);
+        $this->middleware('guest')->only('create');
     }
 
     // 注册
@@ -58,8 +63,15 @@ class UsersController extends Controller
     // 编辑用户的页面
     public function edit(User $user)
     {
-        $this->authorize('update',$user);
-        return view('users.edit',compact('user'));
+        // 5.7/5.8
+        // $this->authorize('update',$user);
+
+        // https://learnku.com/docs/laravel/8.x/authorization/9382#8b90e1
+        $respone = Gate::inspect('update',$user);
+        return $respone->allowed()
+            ? view('users.edit',compact('user'))
+            : Gate::authorize('update',$user);
+
     }
 
     // 更新用户的 post 请求

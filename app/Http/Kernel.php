@@ -51,6 +51,7 @@ class Kernel extends HttpKernel
      *
      * These middleware may be assigned to groups or used individually.
      *
+     * 见：https://learnku.com/docs/laravel/8.x/middleware/9366#2fb6d2
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [

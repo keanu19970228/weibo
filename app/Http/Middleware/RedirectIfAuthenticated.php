@@ -24,7 +24,8 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 // 当已经登录的用户访问 登录、注册 页面的时候
-                session()->flash('info','您已登录，无需再次操作。');
+                $message = $request->is('signup') ? '您已注册并已登录!' : '您已登录，无需再次操作';
+                session()->flash('info',$message);
                 return redirect(RouteServiceProvider::HOME);
             }
         }
