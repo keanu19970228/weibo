@@ -100,7 +100,24 @@ class UsersController extends Controller
     public function index(User $user)
     {
 //        $users = User::all();
+          // 简单分页
+//        $users = User::simplePaginate(6);
         $users = User::paginate(6);
         return view('users.index',compact('users'));
+    }
+
+    // 删除用户动作
+    public function destroy(User $user)
+    {
+        // 5.7/5.8
+        // $this->authorize('destroy',$user);
+        $respone = Gate::inspect('destroy',$user);
+        if($respone->allowed()){
+            $user->delete();
+            session()->flash('success','成功删除用户！');
+        }else{
+            session()->flash('danger','权限不足！');
+        }
+        return back();
     }
 }
