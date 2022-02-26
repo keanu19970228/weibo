@@ -102,8 +102,13 @@ class UsersController extends Controller
 //        $users = User::all();
           // 简单分页
 //        $users = User::simplePaginate(6);
-        $users = User::paginate(6);
-        return view('users.index',compact('users'));
+        $respone = Gate::inspect('destroy',$user);
+        if($respone->allowed()){
+            $users = User::paginate(6);
+            return view('users.index',compact('users'));
+        }
+        session()->flash('danger','权限不足！');
+        return back();
     }
 
     // 删除用户动作
