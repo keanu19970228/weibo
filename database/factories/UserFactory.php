@@ -9,7 +9,7 @@ class UserFactory extends Factory
 {
     /**
      * Define the model's default state.
-     *
+     * 模型工厂，用来生成假数据的
      * @return array
      */
     public function definition()

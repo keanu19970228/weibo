@@ -21,7 +21,9 @@ class UsersController extends Controller
 //        ]);
 
         // 8.x 可以这样写 https://learnku.com/docs/laravel/8.x/controllers/9368#c66e88
-        $this->middleware('auth')->except(['show','create','store']);
+        // 以下方法不使用 auth 中间件
+        $this->middleware('auth')->except(['show','create','store','index']);
+        // 只有以下方法使用 guest 中间件
         $this->middleware('guest')->only('create');
     }
 
@@ -92,5 +94,13 @@ class UsersController extends Controller
 
         session()->flash('success','个人资料更新成功！');
         return redirect()->route('users.show',$user->id);
+    }
+
+    // 显示用户列表
+    public function index(User $user)
+    {
+//        $users = User::all();
+        $users = User::paginate(6);
+        return view('users.index',compact('users'));
     }
 }
