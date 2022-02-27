@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -22,7 +24,7 @@ class UsersController extends Controller
 
         // 8.x 可以这样写 https://learnku.com/docs/laravel/8.x/controllers/9368#c66e88
         // 以下方法不使用 auth 中间件
-        $this->middleware('auth')->except(['show','create','store','index']);
+        $this->middleware('auth')->except(['show','create','store','index','confirmEmail']);
         // 只有以下方法使用 guest 中间件
         $this->middleware('guest')->only('create');
     }
@@ -55,11 +57,14 @@ class UsersController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        //用户注册成功后自动登录。
-        Auth::login($user);
-
-        session()->flash('success','欢迎，您将在这里开启一段新的旅程~');
-        return redirect()->route('users.show',[$user->id]);
+        $this->sendEmailConfirmationTo($user);
+        session()->flash('success','验证邮箱已发送到你的注册邮箱上，请注意查收。');
+        return redirect('/');
+//        //用户注册成功后自动登录。
+//        Auth::login($user);
+//
+//        session()->flash('success','欢迎，您将在这里开启一段新的旅程~');
+//        return redirect()->route('users.show',[$user->id]);
     }
 
     // 编辑用户的页面
@@ -125,4 +130,34 @@ class UsersController extends Controller
         }
         return back();
     }
+
+    // 注册邮箱 api
+    public function sendEmailConfirmationTo($user)
+    {
+        $view = 'emails.confirm';
+        $data = compact('user');
+        $from = 'summer@example.com';
+        $name = 'Summer';
+        $to = $user->email;
+        $subject = '感谢注册 Weibo 应用！请确认你的邮箱。';
+
+        Mail::send($view,$data,function ($message) use ($from,$name,$to,$subject) {
+            $message->from($from,$name)->to($to)->subject($subject);
+        });
+    }
+
+    // 验证邮箱页面
+    public function confirmEmail($token)
+    {
+        $user = User::where('activation_token',$token)->firstOrFail();
+
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->save();
+
+        Auth::login($user);
+        session()->flash('success','恭喜你，激活成功！');
+        return redirect()->route('users.show',[$user->id]);
+    }
+
 }

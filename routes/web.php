@@ -31,3 +31,6 @@ Route::resource('users','UsersController');
 Route::get('login','SessionsController@create')->name('login')->middleware('guest');
 Route::post('login','SessionsController@store')->name('login');
 Route::delete('logout','SessionsController@destroy')->name('logout');
+
+//邮箱激活显示页面
+Route::get('signup/confirm/{token}','UsersController@confirmEmail')->name('confirm_email');
