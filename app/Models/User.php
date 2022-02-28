@@ -56,10 +56,12 @@ class User extends Authenticatable
         return "http://www.gravatar.com/avatar/$hash?s=$size";
     }
 
+    // boot 方法会在用户模型类完成初始化之后进行加载，因此我们对事件的监听需要放在该方法中。
     public static function boot()
     {
         parent::boot();
 
+        // creating 用于监听模型被创建之前的事件，当新用户被创建时生成 activation_token 的值
         static::creating(function ($user) {
             $user->activation_token = Str::random(10);
         });

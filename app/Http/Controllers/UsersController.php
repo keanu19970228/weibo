@@ -149,6 +149,7 @@ class UsersController extends Controller
     // 验证邮箱页面
     public function confirmEmail($token)
     {
+        // 我们需要使用 firstOrFail 方法来取出第一个用户，在查询不到指定用户时将返回一个 404 响应。
         $user = User::where('activation_token',$token)->firstOrFail();
 
         $user->activated = true;
