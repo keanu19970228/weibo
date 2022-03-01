@@ -136,15 +136,26 @@ class UsersController extends Controller
     // 注册邮箱 api
     public function sendEmailConfirmationTo($user)
     {
+        // 线下 log 测试
+//        $view = 'emails.confirm';
+//        $data = compact('user');
+//        $from = 'summer@example.com';
+//        $name = 'Summer';
+//        $to = $user->email;
+//        $subject = '感谢注册 Weibo 应用！请确认你的邮箱。';
+//
+//        Mail::send($view,$data,function ($message) use ($from,$name,$to,$subject) {
+//            $message->from($from,$name)->to($to)->subject($subject);
+//        });
+
+        // 真实发送邮件
         $view = 'emails.confirm';
         $data = compact('user');
-        $from = 'summer@example.com';
-        $name = 'Summer';
         $to = $user->email;
-        $subject = '感谢注册 Weibo 应用！请确认你的邮箱。';
+        $subject = "感谢注册 Weibo 应用！请确认你的邮箱。";
 
-        Mail::send($view,$data,function ($message) use ($from,$name,$to,$subject) {
-            $message->from($from,$name)->to($to)->subject($subject);
+        Mail::send($view, $data, function ($message) use ($to, $subject){
+            $message->to($to)->subject($subject);
         });
     }
 
