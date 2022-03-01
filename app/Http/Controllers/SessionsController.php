@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Auth;
 class SessionsController extends Controller
 {
 //    // 分配到路由中间件  https://learnku.com/docs/laravel/8.x/middleware/9366#901403
-//    public function __construct()
-//    {
+    public function __construct()
+    {
+        // 未登录用户中间件
 //        $this->middleware('guest',[
 //            'only' => ['create'],
 //        ]);
-//    }
+
+        // 登录限流：10 分钟内只能尝试 10 次 登录操作
+        $this->middleware('throttle:8,10')->only('store');
+    }
 
     // 显示用户登录页面
     public function create()
@@ -47,7 +51,7 @@ class SessionsController extends Controller
         }
     }
 
-    // 用户推出登录的 delete
+    // 用户退出登录的 delete
     public function destroy()
     {
         Auth::logout();

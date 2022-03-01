@@ -27,6 +27,8 @@ class UsersController extends Controller
         $this->middleware('auth')->except(['show','create','store','index','confirmEmail']);
         // 只有以下方法使用 guest 中间件
         $this->middleware('guest')->only('create');
+        // 注册限流：一个小时内只能提交 10 次注册请求
+        $this->middleware('throttle:12,60')->only('store');
     }
 
     // 注册
