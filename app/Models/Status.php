@@ -11,7 +11,7 @@ class Status extends Model
 
     public function user()
     {
-        // 在微博模型中，指明一条微博属于一个用户。
+        // 一条微博属于一个用户。
         return $this->belongsTo(User::class);
     }
 }
