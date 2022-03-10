@@ -50,3 +50,7 @@ Route::post('password/reset','PasswordController@reset')->name('password.update'
 //处理创建/删除微博的请求
 Route::resource('statuses','StatusesController',['only'=>['store','destroy']]);
 
+//我的关注
+Route::get('/users/{user}/followings', 'UsersController@followings')->name('users.followings');
+//我的粉丝
+Route::get('/users/{user}/followers', 'UsersController@followers')->name('users.followers');
